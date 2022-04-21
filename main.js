@@ -279,4 +279,4 @@ function autoView() {
     }
     return autoView;
 }
-setInterval(autoView(), 1000 * 5);
+setInterval(autoView(), 1000);
