@@ -270,7 +270,7 @@ function autoView() {
                 document.getElementById('course').selectedIndex = currentCourse + 1;
                 document.getElementsByClassName('cx-btn')[0].click();
             } else {
-                alert("刷课完成！");
+                console.log("刷课完成！");
             }
         }
     } else {
