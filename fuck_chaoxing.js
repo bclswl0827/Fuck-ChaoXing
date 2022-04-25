@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         绕过超星人脸验证
 // @description  绕过超星人脸验证
-// @version      v1.1.0
+// @version      v1.2.0
 // @license      MIT
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
@@ -264,14 +264,15 @@ function autoView() {
         currentCourse = document.getElementById('course');
     if (videoFrame && currentCourse) {
         currentCourse = currentCourse.selectedIndex;
-        var isDone = videoFrame.contentDocument.getElementsByClassName('ans-attach-ct ans-job-finished')[0],
+        var textLength = videoFrame.contentDocument.getElementsByClassName('wrap')[0].innerText.length,
+            isDone = videoFrame.contentDocument.getElementsByClassName('ans-attach-ct ans-job-finished')[0],
             courseLength = document.getElementById('course').length;
-        if (isDone) {
+        if (textLength > 20 || isDone) {
             if (currentCourse < courseLength) {
                 document.getElementById('course').selectedIndex = currentCourse + 1;
                 document.getElementsByClassName('cx-btn')[0].click();
             } else {
-                alert("刷课完成！");
+                console.log("刷课完成！");
             }
         }
     } else {
@@ -281,19 +282,22 @@ function autoView() {
     return autoView;
 }
 
-setInterval(autoView(), 1000 * 5);
+setInterval(autoView(), 500);
 
 // 自动滚屏
 function autoScroll() {
     var videoFrame = document.getElementById('iframe');
     if (videoFrame) {
-        var lastTask = videoFrame.contentDocument.querySelector('div[class="ans-attach-ct"]').offsetTop;
-        window.scrollTo({
-            'behavior': 'smooth',
-            'top': lastTask
-        });
+        var lastTask = videoFrame.contentDocument.querySelector('div[class="ans-attach-ct"]');
+        if (lastTask) {
+            lastTask = lastTask.offsetTop;
+            window.scrollTo({
+                behavior: 'smooth',
+                top: lastTask
+            });
+        }
     }
     return autoScroll;
 }
 
-setInterval(autoScroll(), 1000 * 5);
+setInterval(autoScroll(), 1000 * 3);
