@@ -264,15 +264,17 @@ function autoView() {
         currentCourse = document.getElementById('course');
     if (videoFrame && currentCourse) {
         currentCourse = currentCourse.selectedIndex;
-        var textLength = videoFrame.contentDocument.getElementsByClassName('wrap')[0].innerText.length,
-            isDone = videoFrame.contentDocument.getElementsByClassName('ans-attach-ct ans-job-finished')[0],
-            courseLength = document.getElementById('course').length;
-        if (textLength > 20 || isDone) {
-            if (currentCourse < courseLength) {
-                document.getElementById('course').selectedIndex = currentCourse + 1;
-                document.getElementsByClassName('cx-btn')[0].click();
-            } else {
-                console.log("刷课完成！");
+        if (videoFrame.contentDocument.getElementsByClassName('wrap')[0]) {
+            var textLength = videoFrame.contentDocument.getElementsByClassName('wrap')[0].innerText.length,
+                isDone = videoFrame.contentDocument.getElementsByClassName('ans-attach-ct ans-job-finished')[0],
+                courseLength = document.getElementById('course').length;
+            if (textLength > 20 || isDone) {
+                if (currentCourse < courseLength) {
+                    document.getElementById('course').selectedIndex = currentCourse + 1;
+                    document.getElementsByClassName('cx-btn')[0].click();
+                } else {
+                    console.log("刷课完成！");
+                }
             }
         }
     } else {
