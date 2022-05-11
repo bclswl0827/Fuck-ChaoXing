@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         学习通搜题小助手
-// @description  学习通搜题小助手
+// @name         学习通绕过题目字体加密
+// @description  学习通绕过题目字体加密
 // @version      v1.0.0
 // @license      MIT
 // @grant        GM_addStyle
