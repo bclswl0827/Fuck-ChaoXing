@@ -8,7 +8,7 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setClipboard
 // @grant        unsafeWindow
-// @require      https://cdn.jsdelivr.net/npm/dom-to-image@2.6.0/dist/dom-to-image.min.js
+// @require      https://unpkg.com/dom-to-image@latest/dist/dom-to-image.min.js
 // @match        https://mooc1.chaoxing.com/work/doHomeWorkNew*
 // @run-at       document-end
 // ==/UserScript==
@@ -132,7 +132,7 @@ if (document.getElementsByClassName('font-cxsecret')[0]) {
         var pageHead = document.getElementsByTagName('head')[0],
             importOcr = document.createElement('script'),
             extScript = document.createElement('script');
-        importOcr.src = 'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/2.1.5/tesseract.min.js';
+        importOcr.src = 'https://unpkg.com/tesseract.js@latest/dist/tesseract.min.js';
         pageHead.appendChild(importOcr);
         // 生成内联函数并执行 OCR 识别任务
         extScript.innerText = geneFunction(ocrEnabled, encText);
