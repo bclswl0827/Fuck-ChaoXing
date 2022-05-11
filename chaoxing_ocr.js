@@ -64,7 +64,7 @@ function prettyText() {
     var _encText = document.getElementsByClassName('font-cxsecret');
     if (_encText) {
         [].forEach.call(_encText, function(item, index, arr) {
-            arr[index].innerText = arr[index].innerText.replace(/[\r\n]/g, '').replace(/\ +/g, '');
+            arr[index].innerText = arr[index].innerText.replace(/[\r\n]/g, '').replace(/\ +/g, '').replace(/\[/g, '【').replace(/\]/g, '】');
         });
     }
     return prettyText;
