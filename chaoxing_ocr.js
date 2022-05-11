@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         学习通绕过题目字体加密
-// @description  学习通绕过题目字体加密
+// @name         学习通搜题小助手
+// @description  学习通搜题小助手
 // @version      v1.0.0
 // @license      MIT
 // @grant        GM_addStyle
@@ -8,7 +8,7 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setClipboard
 // @grant        unsafeWindow
-// @require      https://unpkg.com/dom-to-image@latest/dist/dom-to-image.min.js
+// @require      https://cdn.jsdelivr.net/npm/dom-to-image@2.6.0/dist/dom-to-image.min.js
 // @match        https://mooc1.chaoxing.com/work/doHomeWorkNew*
 // @run-at       document-end
 // ==/UserScript==
@@ -20,7 +20,7 @@ function geneFunction(ocrEnabled, encText) {
     return 'var ocrEnabled = ' + ocrEnabled + ',' +
         'encText = ' + encText + ';' +
         // 获取图片 ID 存入数组，然后开始 OCR
-        `var quizImg=document.querySelectorAll('img[alt="chaoxing_nmsl"]');quizImg.forEach(function(e,n,t){encText[n].innerText="正在修复乱码问题以便后续搜题，请稍候..."});var imgList=[];setTimeout(function(){for(var e=document.querySelectorAll('img[alt="chaoxing_nmsl"]'),n=0;n<e.length;n++)imgList.push(n);if(0<imgList.length){async function t(){for(var e in imgList){var{data:{text:n}}=await async function(e){return await Tesseract.recognize(e,"eng+chi_sim")}(document.querySelectorAll('img[alt="chaoxing_nmsl"]')[e].src);encText[e].innerText=n,console.log(n)}}t()}},2e3);`;
+        `var quizImg=document.querySelectorAll('img[alt="chaoxing_nmsl"]');quizImg.forEach(function(e,t,n){encText[t].innerText="正在修复乱码问题以便后续搜题，请稍候..."});var imgList=[];setTimeout(function(){for(var e=document.querySelectorAll('img[alt="chaoxing_nmsl"]'),t=0;t<e.length;t++)imgList.push(t);if(0<imgList.length){async function n(){for(var e in imgList){var{data:{text:t}}=await async function(e){return await Tesseract.recognize(e,"eng+chi_sim")}(document.querySelectorAll('img[alt="chaoxing_nmsl"]')[e].src);encText[e].innerText=t,encText[e].style.color="black",console.log(t)}}n()}},2e3);`;
 
     // 未压缩代码
     /*
@@ -47,6 +47,7 @@ setTimeout(function() {
                     }
                 } = await recText(document.querySelectorAll('img[alt="chaoxing_nmsl"]')[img].src);
                 encText[img].innerText = text;
+                encText[img].style.color = 'black';
                 console.log(text);
             }
         }
@@ -110,10 +111,10 @@ if (document.getElementsByClassName('font-cxsecret')[0]) {
             img.id = count;
             document.body.appendChild(img);
             if (encArray[count].className == 'font-cxsecret fl after') {
-                encArray[count].style = 'padding-left:10px;';
+                encArray[count].style = 'padding-left:10px; color: red;';
                 encArray[count].innerText = '正在修复乱码问题，以便后续搜题，这可能需要一些时间...';
             } else {
-                encArray[count].style = 'line-height: 35px; font-size: 14px; padding-right: 15px;';
+                encArray[count].style = 'line-height: 35px; font-size: 14px; padding-right: 15px; color: red;';
                 encArray[count].innerText = '正在修复乱码问题，以便后续搜题，这可能需要一些时间...';
             }
             console.log('生成第 ' + count++ + ' 个用于 OCR 辨识的图像');
@@ -132,7 +133,7 @@ if (document.getElementsByClassName('font-cxsecret')[0]) {
         var pageHead = document.getElementsByTagName('head')[0],
             importOcr = document.createElement('script'),
             extScript = document.createElement('script');
-        importOcr.src = 'https://unpkg.com/tesseract.js@latest/dist/tesseract.min.js';
+        importOcr.src = 'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/2.1.5/tesseract.min.js';
         pageHead.appendChild(importOcr);
         // 生成内联函数并执行 OCR 识别任务
         extScript.innerText = geneFunction(ocrEnabled, encText);
