@@ -8,7 +8,7 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setClipboard
 // @grant        unsafeWindow
-// @require      https://cdn.jsdelivr.net/npm/dom-to-image@2.6.0/dist/dom-to-image.min.js
+// @require      https://unpkg.com/dom-to-image@2.6.0/dist/dom-to-image.min.js
 // @match        https://mooc1.chaoxing.com/work/doHomeWorkNew*
 // @run-at       document-end
 // ==/UserScript==
@@ -20,7 +20,7 @@ function geneFunction(ocrEnabled, encText) {
     return 'var ocrEnabled = ' + ocrEnabled + ',' +
         'encText = ' + encText + ';' +
         // 获取图片 ID 存入数组，然后开始 OCR
-        `var quizImg=document.querySelectorAll('img[alt="chaoxing_nmsl"]');quizImg.forEach(function(e,t,n){encText[t].innerText="正在修复乱码问题以便后续搜题，请稍候..."});var imgList=[];setTimeout(function(){for(var e=document.querySelectorAll('img[alt="chaoxing_nmsl"]'),t=0;t<e.length;t++)imgList.push(t);if(0<imgList.length){async function n(){for(var e in imgList){var{data:{text:t}}=await async function(e){return await Tesseract.recognize(e,"eng+chi_sim")}(document.querySelectorAll('img[alt="chaoxing_nmsl"]')[e].src);encText[e].innerText=t,encText[e].style.color="black",console.log(t)}}n()}},2e3);`;
+        `var quizImg=document.querySelectorAll('img[alt="chaoxing_nmsl"]');quizImg.forEach(function(e,t,n){encText[t].innerText="正在修复乱码问题以便后续搜题，请稍候..."});var imgList=[];setTimeout(function(){for(var e=document.querySelectorAll('img[alt="chaoxing_nmsl"]'),t=0;t<e.length;t++)imgList.push(t);if(0<imgList.length){var n=-1<window.navigator.userAgent.indexOf("Edge")?"https://unpkg.com/tesseract.js-core@latest/tesseract-core.asm.js":"https://unpkg.com/tesseract.js-core@latest/tesseract-core.wasm.js",c=-1<window.navigator.userAgent.indexOf("Edge")?"false":"true";async function a(){for(var e in imgList){var{data:{text:t}}=await async function(e){return await Tesseract.recognize(e,"eng+chi_sim",{corePath:n,cacheMethod:c})}(document.querySelectorAll('img[alt="chaoxing_nmsl"]')[e].src);encText[e].innerText=t,encText[e].style.color="black",console.log(t)}}a()}},2e3);`;
 
     // 未压缩代码
     /*
@@ -29,16 +29,21 @@ var quizImg = document.querySelectorAll('img[alt="chaoxing_nmsl"]');
 quizImg.forEach(function(item, index, arr) {
     encText[index].innerText = '正在修复乱码问题以便后续搜题，请稍候...';
 });
-
 // 获取图片 ID 存入数组
 var imgList = [];
-
+// 启动 OCR
 setTimeout(function() {
     var imgTag = document.querySelectorAll('img[alt="chaoxing_nmsl"]');
     for (var i = 0; i < imgTag.length; i++) {
         imgList.push(i);
     }
     if (imgList.length > 0) {
+        var corePath = window.navigator.userAgent.indexOf("Edge") > -1 ?
+            'https://unpkg.com/tesseract.js-core@latest/tesseract-core.asm.js' :
+            'https://unpkg.com/tesseract.js-core@latest/tesseract-core.wasm.js';
+        var cacheEnabled = window.navigator.userAgent.indexOf("Edge") > -1 ?
+            'false' :
+            'true';
         async function displayText() {
             for (var img in imgList) {
                 const {
@@ -52,7 +57,12 @@ setTimeout(function() {
             }
         }
         async function recText(img) {
-            return await Tesseract.recognize(img, 'eng+chi_sim');
+            return await Tesseract.recognize(
+                img,
+                'eng+chi_sim', {
+                    corePath: corePath,
+                    cacheMethod: cacheEnabled
+                });
         }
         displayText();
     }
@@ -63,8 +73,18 @@ setTimeout(function() {
 function prettyText() {
     var _encText = document.getElementsByClassName('font-cxsecret');
     if (_encText) {
+        // 透过正则纠正一部分字符串，提高题目匹配成功率
         [].forEach.call(_encText, function(item, index, arr) {
-            arr[index].innerText = arr[index].innerText.replace(/[\r\n]/g, '').replace(/\ +/g, '').replace(/\[/g, '【').replace(/\]/g, '】');
+            // 移除空格和换行
+            arr[index].innerText = arr[index].innerText.replace(/[\r\n]/g, '').replace(/\ +/g, '');
+            // 半角符号转全角
+            arr[index].innerText = arr[index].innerText.replace(/\[/g, '【').replace(/\]/g, '】');
+            // 碰到两个相同方向双引号，则替换为「“”」
+            //arr[index].innerText = arr[index].innerText.replace(/(?<=“).*?(?=“)/, '“$2”');
+            // 句号误判为 o，自动转句号
+            //arr[index].innerText = arr[index].innerText.replace(/(.{3}$)/g, arr[index].innerText.match(/(.{3}$)/g)[0].replace(/o/g, '。'));
+            // 显示最终结果
+            arr[index].innerText = arr[index].innerText;
         });
     }
     return prettyText;
@@ -133,7 +153,7 @@ if (document.getElementsByClassName('font-cxsecret')[0]) {
         var pageHead = document.getElementsByTagName('head')[0],
             importOcr = document.createElement('script'),
             extScript = document.createElement('script');
-        importOcr.src = 'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/2.1.5/tesseract.min.js';
+        importOcr.src = 'https://unpkg.com/tesseract.js@2.1.5/dist/tesseract.min.js';
         pageHead.appendChild(importOcr);
         // 生成内联函数并执行 OCR 识别任务
         extScript.innerText = geneFunction(ocrEnabled, encText);
