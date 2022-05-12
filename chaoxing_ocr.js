@@ -13,14 +13,12 @@
 // @run-at       document-end
 // ==/UserScript==
 
-var encText;
-
 // 生成页面内联函数
 function geneFunction(ocrEnabled, encText) {
     return 'var ocrEnabled = ' + ocrEnabled + ',' +
         'encText = ' + encText + ';' +
         // 获取图片 ID 存入数组，然后开始 OCR
-        `var quizImg=document.querySelectorAll('img[alt="chaoxing_nmsl"]');quizImg.forEach(function(e,t,n){encText[t].innerText="正在修复乱码问题以便后续搜题，请稍候..."});var imgList=[];setTimeout(function(){for(var e=document.querySelectorAll('img[alt="chaoxing_nmsl"]'),t=0;t<e.length;t++)imgList.push(t);if(0<imgList.length){var n=-1<window.navigator.userAgent.indexOf("Edge")?"https://unpkg.com/tesseract.js-core@latest/tesseract-core.asm.js":"https://unpkg.com/tesseract.js-core@latest/tesseract-core.wasm.js",c=-1<window.navigator.userAgent.indexOf("Edge")?"false":"true";async function a(){for(var e in imgList){var{data:{text:t}}=await async function(e){return await Tesseract.recognize(e,"eng+chi_sim",{corePath:n,cacheMethod:c})}(document.querySelectorAll('img[alt="chaoxing_nmsl"]')[e].src);encText[e].innerText=t,encText[e].style.color="black",console.log(t)}}a()}},2e3);`;
+        `var quizImg=document.querySelectorAll('img[alt="chaoxing_nmsl"]');quizImg.forEach(function(e,t,n){encText[t].innerText="正在修复乱码问题以便后续搜题，请稍候..."});var imgList=[];setTimeout(function(){for(var e=document.querySelectorAll('img[alt="chaoxing_nmsl"]'),t=0;t<e.length;t++)imgList.push(t);if(0<imgList.length){var n=-1<window.navigator.userAgent.indexOf("Edge")?"false":"true";async function i(){for(var e in imgList){var{data:{text:t}}=await async function(e){return await Tesseract.recognize(e,"eng+chi_sim",{cacheMethod:n,langPath:"http://127.0.0.1:8000/lib"})}(document.querySelectorAll('img[alt="chaoxing_nmsl"]')[e].src);encText[e].innerText=t,encText[e].style.color="black",console.log(t)}}i()}},2e3);`;
 
     // 未压缩代码
     /*
@@ -38,9 +36,6 @@ setTimeout(function() {
         imgList.push(i);
     }
     if (imgList.length > 0) {
-        var corePath = window.navigator.userAgent.indexOf("Edge") > -1 ?
-            'https://unpkg.com/tesseract.js-core@latest/tesseract-core.asm.js' :
-            'https://unpkg.com/tesseract.js-core@latest/tesseract-core.wasm.js';
         var cacheEnabled = window.navigator.userAgent.indexOf("Edge") > -1 ?
             'false' :
             'true';
@@ -60,7 +55,6 @@ setTimeout(function() {
             return await Tesseract.recognize(
                 img,
                 'eng+chi_sim', {
-                    corePath: corePath,
                     cacheMethod: cacheEnabled
                 });
         }
@@ -96,8 +90,7 @@ setInterval(function() {
 // 根据情况向 HTML 中灌入 JS
 if (document.getElementsByClassName('font-cxsecret')[0]) {
     console.log('在页面中检测到加密文本');
-    ocrEnabled = true;
-    encText = `document.getElementsByClassName('font-cxsecret');`;
+    var encText = `document.getElementsByClassName('font-cxsecret');`;
     var encArray = document.getElementsByClassName('font-cxsecret');
     // 将 DOM 转换为 Base64 图片
     [].forEach.call(encArray, function(item, index, arr) {
@@ -107,17 +100,6 @@ if (document.getElementsByClassName('font-cxsecret')[0]) {
         } else {
             arr[index].style = 'line-height: 90px; font-size: 50px; letter-spacing: 5px;';
         }
-        // domtoimage.toJpeg(arr[index], {
-        //     quality: 1.0,
-        //     bgcolor: '#fff'
-        // }).then(function(dataUrl) {
-        //     var img = new Image();
-        //     img.src = dataUrl;
-        //     img.alt = 'chaoxing_nmsl';
-        //     img.style = 'display:none;';
-        //     img.id = index;
-        //     document.body.appendChild(img);
-        // });
     });
     // 按顺序生成图像
     var count = 0;
@@ -156,9 +138,9 @@ if (document.getElementsByClassName('font-cxsecret')[0]) {
         importOcr.src = 'https://unpkg.com/tesseract.js@2.1.5/dist/tesseract.min.js';
         pageHead.appendChild(importOcr);
         // 生成内联函数并执行 OCR 识别任务
-        extScript.innerText = geneFunction(ocrEnabled, encText);
+        extScript.innerText = geneFunction(true, encText);
         pageHead.appendChild(extScript);
     }, 1000);
 } else {
     console.log('没有检测到加密文本');
-}
+} 
