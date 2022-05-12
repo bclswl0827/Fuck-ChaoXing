@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         学习通搜题小助手
 // @description  学习通搜题小助手
-// @version      v1.0.0
+// @version      v1.0.1
 // @license      MIT
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
@@ -17,16 +17,10 @@
 function geneFunction(ocrEnabled, encText) {
     return 'var ocrEnabled = ' + ocrEnabled + ',' +
         'encText = ' + encText + ';' +
-        // 获取图片 ID 存入数组，然后开始 OCR
-        `var quizImg=document.querySelectorAll('img[alt="chaoxing_nmsl"]');quizImg.forEach(function(e,t,n){encText[t].innerText="正在修复乱码问题以便后续搜题，请稍候..."});var imgList=[];setTimeout(function(){for(var e=document.querySelectorAll('img[alt="chaoxing_nmsl"]'),t=0;t<e.length;t++)imgList.push(t);if(0<imgList.length){var n=-1<window.navigator.userAgent.indexOf("Edge")?"false":"true";async function i(){for(var e in imgList){var{data:{text:t}}=await async function(e){return await Tesseract.recognize(e,"eng+chi_sim",{cacheMethod:n,langPath:"http://127.0.0.1:8000/lib"})}(document.querySelectorAll('img[alt="chaoxing_nmsl"]')[e].src);encText[e].innerText=t,encText[e].style.color="black",console.log(t)}}i()}},2e3);`;
+        `var imgList=[];setTimeout(function(){for(var t=document.querySelectorAll('img[alt="chaoxing_nmsl"]'),e=0;e<t.length;e++)imgList.push(e);if(0<imgList.length){async function i(){for(var t in imgList){var{data:{text:e}}=await async function(t){return await Tesseract.recognize(t,"eng+chi_sim",{langPath:"https://c.ibcl.us/ocr-lib"})}(document.querySelectorAll('img[alt="chaoxing_nmsl"]')[t].src);encText[t].innerText=e,encText[t].style.color="black",console.log(e)}}i()}},2e3);`;
 
     // 未压缩代码
     /*
-// 遍历 img 标签，替换对应题目文字
-var quizImg = document.querySelectorAll('img[alt="chaoxing_nmsl"]');
-quizImg.forEach(function(item, index, arr) {
-    encText[index].innerText = '正在修复乱码问题以便后续搜题，请稍候...';
-});
 // 获取图片 ID 存入数组
 var imgList = [];
 // 启动 OCR
@@ -36,9 +30,6 @@ setTimeout(function() {
         imgList.push(i);
     }
     if (imgList.length > 0) {
-        var cacheEnabled = window.navigator.userAgent.indexOf("Edge") > -1 ?
-            'false' :
-            'true';
         async function displayText() {
             for (var img in imgList) {
                 const {
@@ -55,7 +46,7 @@ setTimeout(function() {
             return await Tesseract.recognize(
                 img,
                 'eng+chi_sim', {
-                    cacheMethod: cacheEnabled
+                    langPath: 'https://c.ibcl.us/ocr-lib'
                 });
         }
         displayText();
@@ -119,7 +110,7 @@ if (document.getElementsByClassName('font-cxsecret')[0]) {
                 encArray[count].style = 'line-height: 35px; font-size: 14px; padding-right: 15px; color: red;';
                 encArray[count].innerText = '正在修复乱码问题，以便后续搜题，这可能需要一些时间...';
             }
-            console.log('生成第 ' + count++ + ' 个用于 OCR 辨识的图像');
+            console.log('生成第 ' + ++count + ' 个用于 OCR 辨识的图像');
         }
     }
     async function convertImg(num) {
