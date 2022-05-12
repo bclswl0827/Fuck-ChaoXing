@@ -17,7 +17,7 @@
 function geneFunction(ocrEnabled, encText) {
     return 'var ocrEnabled = ' + ocrEnabled + ',' +
         'encText = ' + encText + ';' +
-        `var imgList=[];setTimeout(function(){for(var t=document.querySelectorAll('img[alt="chaoxing_nmsl"]'),e=0;e<t.length;e++)imgList.push(e);if(0<imgList.length){async function i(){for(var t in imgList){var{data:{text:e}}=await async function(t){return await Tesseract.recognize(t,"eng+chi_sim",{langPath:"https://c.ibcl.us/ocr-lib"})}(document.querySelectorAll('img[alt="chaoxing_nmsl"]')[t].src);encText[t].innerText=e,encText[t].style.color="black",console.log(e)}}i()}},2e3);`;
+        `var imgList=[];setTimeout(function(){for(var t=document.querySelectorAll('img[alt="chaoxing_nmsl"]'),e=0;e<t.length;e++)imgList.push(e);if(0<imgList.length){async function i(){for(var t in imgList){var{data:{text:e}}=await async function(t){return await Tesseract.recognize(t,"chi_sim",{langPath:"https://c.ibcl.us/ocr-lib"})}(document.querySelectorAll('img[alt="chaoxing_nmsl"]')[t].src);encText[t].innerText=e,encText[t].style.color="black",console.log(e)}}i()}},2e3);`;
 
     // 未压缩代码
     /*
@@ -45,7 +45,7 @@ setTimeout(function() {
         async function recText(img) {
             return await Tesseract.recognize(
                 img,
-                'eng+chi_sim', {
+                'chi_sim', {
                     langPath: 'https://c.ibcl.us/ocr-lib'
                 });
         }
