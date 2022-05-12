@@ -104,11 +104,11 @@ if (document.getElementsByClassName('font-cxsecret')[0]) {
     [].forEach.call(encArray, function(item, index, arr) {
         // 改大字体、加入空格便于识别
         if (arr[index].className == 'font-cxsecret fl after') {
-            arr[index].style = 'line-height: 80px; font-size: 40px; color: green; letter-spacing: 3px;';
+            arr[index].style = 'line-height: 80px; font-size: 40px; color: red; letter-spacing: 3px;';
         } else {
             // 为题目括号增大间距，避免识别错误
             arr[index].innerText = arr[index].innerText.replace(/(\()(\))/g, '    $1 $2');
-            arr[index].style = 'line-height: 80px; font-size: 40px; color: green; letter-spacing: 3px;';
+            arr[index].style = 'line-height: 80px; font-size: 40px; color: red; letter-spacing: 3px;';
         }
     });
     // 按顺序生成图像
