@@ -91,9 +91,7 @@ function prettyText() {
     }
     return prettyText;
 }
-setInterval(function() {
-    prettyText()
-}, 1000);
+setInterval(prettyText(), 1000);
 
 // 根据情况向 HTML 中灌入 JS
 if (document.getElementsByClassName('font-cxsecret')[0]) {
