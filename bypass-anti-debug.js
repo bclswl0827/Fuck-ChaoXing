@@ -11,7 +11,7 @@
     // 停止清空控制台
     var interval = setInterval(function() {
         unsafeWindow.console.clear = () => {};
-    }, 0); // 设置 0 不执行
+    }, 0); // 设置 0 有空则执行
 
     // 页面加载过后停用所有定时器
     window.onload = function() {
